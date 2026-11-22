@@ -1,0 +1,13 @@
+{
+  "seed": 681024,
+  "challenge_bits": 64,
+  "chains": [1, 4],
+  "devices": 4,
+  "trials": 4,
+  "budgets": [120, 240],
+  "enrollment_reads": [1, 3, 5],
+  "read_noise": [0.03],
+  "session_drift": [0.0, 0.15],
+  "reference_challenges": 512,
+  "bootstrap_resamples": 100
+}

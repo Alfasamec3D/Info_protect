@@ -1,0 +1,37 @@
+{
+  "config": {
+    "seed": 681024,
+    "challenge_bits": 64,
+    "chains": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "devices": 48,
+    "trials": 40,
+    "budgets": [
+      1200,
+      4800
+    ],
+    "enrollment_reads": [
+      1,
+      3,
+      5,
+      9
+    ],
+    "read_noise": [
+      0.03,
+      0.1
+    ],
+    "session_drift": [
+      0.0,
+      0.05,
+      0.15,
+      0.3
+    ],
+    "reference_challenges": 32768,
+    "bootstrap_resamples": 4000
+  },
+  "devices_are_bootstrap_clusters": true
+}

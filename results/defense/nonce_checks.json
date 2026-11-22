@@ -1,0 +1,7 @@
+{
+  "fresh_proof_accepted": true,
+  "repeated_proof_rejected": true,
+  "wrong_device_key_rejected": true,
+  "expired_challenge_rejected": true,
+  "concurrent_acceptance_count": 1
+}

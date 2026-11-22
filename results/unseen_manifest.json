@@ -1,0 +1,8 @@
+{
+  "seed": 128238,
+  "devices": 192,
+  "inputs": 8192,
+  "challenge_bits": 64,
+  "bootstrap_resamples": 4000,
+  "shared_challenge_set": true
+}

@@ -1,0 +1,91 @@
+{
+  "profile": "repeat",
+  "seed": 381102,
+  "cohorts": 32,
+  "devices": 16,
+  "series": 8,
+  "inputs": 256,
+  "resamples": 4000,
+  "scenarios": {
+    "no_drift": {
+      "noise": 0.1,
+      "components": []
+    },
+    "weak": {
+      "noise": 0.1,
+      "components": [
+        [
+          0.06,
+          0.95
+        ]
+      ]
+    },
+    "fast": {
+      "noise": 0.1,
+      "components": [
+        [
+          0.2,
+          0.7
+        ]
+      ]
+    },
+    "slow": {
+      "noise": 0.1,
+      "components": [
+        [
+          0.3,
+          0.98
+        ]
+      ]
+    },
+    "mixed": {
+      "noise": 0.1,
+      "components": [
+        [
+          0.14,
+          0.55
+        ],
+        [
+          0.26,
+          0.985
+        ]
+      ]
+    }
+  },
+  "plans": {
+    "early": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6,
+      72
+    ],
+    "spread": [
+      0,
+      1,
+      3,
+      9,
+      18,
+      36,
+      72
+    ],
+    "late": [
+      0,
+      5,
+      10,
+      20,
+      32,
+      48,
+      72
+    ]
+  },
+  "test_lags": [
+    12,
+    27,
+    54,
+    108
+  ],
+  "reads_per_calibration_series": 8
+}

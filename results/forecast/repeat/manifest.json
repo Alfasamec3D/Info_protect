@@ -1,0 +1,44 @@
+{
+  "profile": "repeat",
+  "seed": 481268,
+  "train_devices": 1024,
+  "validation_devices": 256,
+  "test_devices": 512,
+  "calibration_inputs": 512,
+  "next_inputs": 2048,
+  "bootstrap_resamples": 4000,
+  "chains": [
+    1,
+    2,
+    4
+  ],
+  "challenge_bits": 64,
+  "read_noise_range": [
+    0.04,
+    0.14
+  ],
+  "regime_parameters": {
+    "stable": {
+      "drift": 0.0,
+      "lag_1_persistence": 0.0
+    },
+    "persistent": {
+      "drift": 0.22,
+      "lag_1_persistence": 0.995
+    },
+    "volatile": {
+      "drift": 0.32,
+      "lag_1_persistence": 0.12
+    }
+  },
+  "features": [
+    "current_ber",
+    "within_session_disagreement",
+    "block_ber_sd",
+    "response_abs_bias",
+    "chains"
+  ],
+  "target": "next_ber",
+  "cross_regime_protocol": "frozen models and target-regime held-out devices",
+  "scikit_learn": "1.7.2"
+}

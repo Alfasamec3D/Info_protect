@@ -1,0 +1,46 @@
+{
+  "profile": "main",
+  "seed": 764211,
+  "spatial_devices": 256,
+  "spatial_inputs": 8192,
+  "temporal_devices": 48,
+  "trials": 32,
+  "reference_inputs": 32768,
+  "resamples": 4000,
+  "budget": 2400,
+  "read_noise": 0.1,
+  "drift": [
+    0.08,
+    0.3
+  ],
+  "repeats": [
+    1,
+    3,
+    5,
+    9
+  ],
+  "temporal_chains": [
+    1,
+    2,
+    4
+  ],
+  "persistence": [
+    0.0,
+    0.7,
+    0.9,
+    0.92,
+    0.94,
+    0.96,
+    0.98,
+    1.0
+  ],
+  "spatial_correlations": [
+    0.0,
+    0.1,
+    0.3,
+    0.6,
+    0.9,
+    1.0
+  ],
+  "verification_lag": 9
+}

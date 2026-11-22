@@ -1,0 +1,13 @@
+{
+  "seed": 20261122,
+  "challenge_bits": 64,
+  "chains": [1, 2, 3, 4],
+  "noise_levels": [0.0, 0.03, 0.10, 0.25],
+  "devices": 24,
+  "reference_challenges": 32768,
+  "uniqueness_challenges": 8192,
+  "budgets": [1200, 4800],
+  "enrollment_reads": [1, 3, 5, 9],
+  "trials": 48,
+  "bootstrap_resamples": 4000
+}
