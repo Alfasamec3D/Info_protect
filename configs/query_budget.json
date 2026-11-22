@@ -1,0 +1,63 @@
+{
+  "n": 64,
+  "seeds": [
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110
+  ],
+  "chains": [
+    1
+  ],
+  "budgets": [
+    1024,
+    4096,
+    16384
+  ],
+  "noise": [
+    0.0,
+    0.25,
+    0.75
+  ],
+  "validation_queries": 256,
+  "test_size": 10000,
+  "epochs": 100,
+  "restarts": 3,
+  "width": 32,
+  "strategies": [
+    {
+      "name": "single",
+      "repeats": 1,
+      "target": "majority"
+    },
+    {
+      "name": "majority_3",
+      "repeats": 3,
+      "target": "majority"
+    },
+    {
+      "name": "soft_3",
+      "repeats": 3,
+      "target": "soft"
+    },
+    {
+      "name": "majority_5",
+      "repeats": 5,
+      "target": "majority"
+    },
+    {
+      "name": "soft_5",
+      "repeats": 5,
+      "target": "soft"
+    }
+  ],
+  "models": [
+    "lr"
+  ]
+}

@@ -1,0 +1,5 @@
+# Versions used for the included results (Python 3.14.0 on Linux).
+# For installation on other Python versions use pyproject.toml ranges.
+numpy==2.3.5
+scipy==1.16.3
+matplotlib==3.10.7

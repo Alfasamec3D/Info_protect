@@ -1,0 +1,72 @@
+{
+  "fingerprint": "4251d5974e11e41b1055837d1eb017e813e330d814c92f2f636484bb18cc4036",
+  "config": {
+    "n": 64,
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110
+    ],
+    "chains": [
+      1
+    ],
+    "budgets": [
+      1024,
+      4096,
+      16384
+    ],
+    "noise": [
+      0.0,
+      0.25,
+      0.75
+    ],
+    "validation_queries": 256,
+    "test_size": 10000,
+    "epochs": 100,
+    "restarts": 3,
+    "width": 32,
+    "strategies": [
+      {
+        "name": "single",
+        "repeats": 1,
+        "target": "majority"
+      },
+      {
+        "name": "majority_3",
+        "repeats": 3,
+        "target": "majority"
+      },
+      {
+        "name": "soft_3",
+        "repeats": 3,
+        "target": "soft"
+      },
+      {
+        "name": "majority_5",
+        "repeats": 5,
+        "target": "majority"
+      },
+      {
+        "name": "soft_5",
+        "repeats": 5,
+        "target": "soft"
+      }
+    ],
+    "models": [
+      "lr"
+    ]
+  },
+  "python": "3.14.4",
+  "numpy": "2.3.5",
+  "scipy": "1.16.3",
+  "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+  "git_head": "4551b6459fb70528680a0f77c913ee1e7841f0ae",
+  "note": "fingerprint hashes actual source files and config, including uncommitted source"
+}

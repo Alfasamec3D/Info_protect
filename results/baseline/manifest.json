@@ -1,0 +1,52 @@
+{
+  "fingerprint": "3fe696363b1e03c1698a85f43158a3259b6a2657aeeccd68d8708bc2e3511f4b",
+  "config": {
+    "n": 64,
+    "seeds": [
+      11,
+      22,
+      33,
+      44,
+      55
+    ],
+    "chains": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "budgets": [
+      1256,
+      5256,
+      10256
+    ],
+    "noise": [
+      0.0
+    ],
+    "validation_queries": 256,
+    "test_size": 10000,
+    "epochs": 100,
+    "restarts": 3,
+    "width": 32,
+    "strategies": [
+      {
+        "name": "single",
+        "repeats": 1,
+        "target": "majority"
+      }
+    ],
+    "models": [
+      "majority",
+      "raw_lr",
+      "lr",
+      "xor_lr",
+      "mlp"
+    ]
+  },
+  "python": "3.14.4",
+  "numpy": "2.3.5",
+  "scipy": "1.16.3",
+  "platform": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+  "git_head": "4551b6459fb70528680a0f77c913ee1e7841f0ae",
+  "note": "fingerprint hashes actual source files and config, including uncommitted source"
+}

@@ -1,0 +1,16 @@
+{
+  "queries": 960,
+  "trials": 2000,
+  "sigma": 0.75,
+  "puf_source_sha256": "1a92240ac31f9ef9e76232e9f8e1bc596a60bfbcb310c0f5814e2092072dd940",
+  "n": 64,
+  "puf_seed": 2026,
+  "sampling_seeds": [
+    8001,
+    8003,
+    8005
+  ],
+  "numpy": "2.3.5",
+  "source_sha256": "7f4b5b3665f2c5954511c835284bd0e1a413ac4a0b798b645cad5150da295217",
+  "note": "evaluator-only information calculation; not an attack"
+}

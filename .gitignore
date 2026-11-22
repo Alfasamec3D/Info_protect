@@ -221,3 +221,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Generated scratch experiments and CRP datasets
+/data/
+/results/smoke/
+/results/local*/
+/report/__pycache__/

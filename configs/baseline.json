@@ -1,0 +1,43 @@
+{
+  "n": 64,
+  "seeds": [
+    11,
+    22,
+    33,
+    44,
+    55
+  ],
+  "chains": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "budgets": [
+    1256,
+    5256,
+    10256
+  ],
+  "noise": [
+    0.0
+  ],
+  "validation_queries": 256,
+  "test_size": 10000,
+  "epochs": 100,
+  "restarts": 3,
+  "width": 32,
+  "strategies": [
+    {
+      "name": "single",
+      "repeats": 1,
+      "target": "majority"
+    }
+  ],
+  "models": [
+    "majority",
+    "raw_lr",
+    "lr",
+    "xor_lr",
+    "mlp"
+  ]
+}
