@@ -1,0 +1,16 @@
+{
+  "status": "fixed_after_5_instance_pilot_before_confirmation",
+  "primary_hypothesis": "count_likelihood has lower held-out probability MSE than unweighted soft labels after outcome-dependent 3-or-M sampling",
+  "primary_metric": "probability_mse",
+  "contrast": "count_likelihood minus unweighted",
+  "confirmatory_seeds": [3001, 3100],
+  "cells": "2 noise levels x 2 budgets x 2 caps = 8",
+  "familywise_alpha": 0.05,
+  "interval": "paired two-sided Student t, Bonferroni across 8 primary contrasts",
+  "secondary_metrics": ["expected_nll", "accuracy", "expected_accuracy"],
+  "secondary_baselines": ["single", "fixed5"],
+  "scope": "iid Gaussian delay noise; 64-stage single Arbiter PUF; synthetic data",
+  "fixed_hyperparameters": "probit link, L2=1e-6, L-BFGS-B 300 iterations, ftol=1e-12, gtol=1e-7",
+  "selection": "no hyperparameter selection or validation queries; pilot did not change model settings",
+  "limitations": "not an externally preregistered study; no claim of stronger binary attack or hardware validation; no world-priority proof"
+}

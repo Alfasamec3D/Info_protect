@@ -1,0 +1,67 @@
+{
+  "searched_on": "2026-11-23",
+  "scope": "Outcome-dependent repetition counts and calibration of reliability-based Arbiter-PUF models",
+  "queries": [
+    "PUF adaptive repeated stopping",
+    "physical unclonable stopping",
+    "PUF adaptive measurements reliability",
+    "PUF optional stopping",
+    "PUF confidence weighting repeatability",
+    "optional stopping sample proportion bias Bernoulli",
+    "PUF stopping rule modeling",
+    "PUF adaptive repetitions",
+    "PUF sequential sampling",
+    "arbiter PUF optional stopping",
+    "physical unclonable stopping rule",
+    "PUF outcome-dependent",
+    "PUF stopping bias"
+  ],
+  "sources": [
+    {
+      "id": "DV",
+      "title": "Side Channel Modeling Attacks on 65nm Arbiter PUFs Exploiting CMOS Device Noise",
+      "authors": "Jeroen Delvaux; Ingrid Verbauwhede",
+      "url": "https://cosicdatabase.esat.kuleuven.be/backend/publications/files/conferencepaper/2344",
+      "access": "full primary PDF; relevant sections III, IV-A, IV-D",
+      "overlap": "Repeated response rates, noise-derived delay information, least squares; adaptive challenge selection discussed.",
+      "difference": "Section IV-A describes M evaluations per challenge; inspected sections do not analyze 3-or-M outcome-dependent stopping, its exact mean distortion, and count-likelihood calibration. This is a scoped comparison, not an assertion about all PUF papers."
+    },
+    {
+      "id": "LZ",
+      "title": "A Low-Dimension High-Fidelity Reliability Representation for Reliability-based Machine Learning Modeling of Physical Unclonable Functions",
+      "authors": "Gaoxiang Li; Yu Zhuang",
+      "url": "https://arxiv.org/html/2405.13147v2",
+      "access": "primary full HTML v2, especially survey and experimental methods",
+      "overlap": "Reliability representations and majority-vote-enhanced PUFs; repeated response information.",
+      "difference": "Different problem: modeling highly reliable PUFs using LDHF. Our experiment studies variable measurement counts chosen from responses and probability calibration. We do not claim to reproduce or beat LDHF."
+    },
+    {
+      "id": "CW2026",
+      "title": "PUF Side-Channel Modeling Attack Based on Confidence Weighting of Response Repeatability",
+      "url": "https://ieeexplore.ieee.org/abstract/document/11710904/",
+      "doi": "10.1109/ITC-Asia71864.2026.11710904",
+      "access": "publisher abstract exposed in search; direct page blocked; full text NOT inspected",
+      "overlap": "Weighted least squares uses response repetition rates, probabilities and measurement counts. Generic weighting of repeated PUF observations is NOT a defensible novelty claim.",
+      "difference": "Abstract does not establish whether outcome-dependent stopping bias is addressed. Full-text overlap remains unresolved; must not claim exclusion."
+    },
+    {
+      "id": "STAT2016",
+      "title": "Properties of Estimators in Exponential Family Settings with Observation-based Stopping Rules",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4861245/",
+      "access": "primary open full text",
+      "overlap": "Stopping-related estimator bias and joint likelihood theory are established general statistics.",
+      "difference": "General foundations, not a PUF contribution. We derive a particular 3-or-M soft-label transformation and a nonzero population-risk derivative for a probit PUF model; general optional-stopping theory is cited rather than claimed."
+    },
+    {
+      "id": "WHITEHEAD",
+      "title": "On the bias of maximum likelihood estimation following a sequential test",
+      "authors": "John Whitehead",
+      "url": "https://academic.oup.com/biomet/article-abstract/73/3/573/250119",
+      "doi": "10.1093/biomet/73.3.573",
+      "access": "publisher abstract only",
+      "overlap": "Bias after sequential sampling is known; finite-sample MLE need not be unbiased.",
+      "difference": "Our count-based objective has the correct stopped-path likelihood, not a guarantee of unbiased finite-sample parameter estimates."
+    }
+  ],
+  "conclusion": "Original work within this project: derived stopping-law distortion and scale-score analysis, implementation, independent PUF calibration experiment. No exact counterpart located in inspected primary sections. Global novelty and priority are not proved; 2026 weighted-PUF full text remains an explicit gap."
+}

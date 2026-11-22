@@ -1,0 +1,30 @@
+{
+  "config": {
+    "n": 64,
+    "seeds": [
+      2001,
+      2002,
+      2003,
+      2004,
+      2005
+    ],
+    "sigmas": [
+      0.25,
+      0.75
+    ],
+    "budgets": [
+      4096,
+      16384
+    ],
+    "caps": [
+      5,
+      15
+    ],
+    "test_size": 10000
+  },
+  "sha256": "a8070adc37b1d23cbd825f965e2105005153230729163a6a74fb0a47840c3cd9",
+  "numpy": "2.3.5",
+  "scipy": "1.16.3",
+  "python": "3.14.4",
+  "note": "all queries charged; test probabilities evaluator-only"
+}

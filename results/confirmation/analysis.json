@@ -1,0 +1,8 @@
+{
+  "completed": 300,
+  "expected": 300,
+  "lbfgs_all_converged": true,
+  "fit_seconds": 1.5550357309839455,
+  "ci": "Student t, 95%, across independent PUF instances; exploratory, unadjusted",
+  "test": "noiseless targets; noisy_accuracy is exact expected single-read agreement"
+}

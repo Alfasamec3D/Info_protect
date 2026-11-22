@@ -13,3 +13,7 @@ jobs:
         env:
           OPENBLAS_NUM_THREADS: '1'
           OMP_NUM_THREADS: '1'
+      - run: python -m unittest discover -s research/stopping -p 'test_*.py' -v
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'

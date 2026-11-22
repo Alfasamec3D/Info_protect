@@ -1,0 +1,10 @@
+{
+  "runs": 3200,
+  "expected": 3200,
+  "instances": 100,
+  "primary_cells": 8,
+  "primary_intervals_below_zero": 8,
+  "protocol_sha256": "e6120d4d9e92a8666aa961c54d2a5719ecb712980587086a381dbcd6d78342f5",
+  "all_optimizers_converged": true,
+  "source_verified": true
+}
