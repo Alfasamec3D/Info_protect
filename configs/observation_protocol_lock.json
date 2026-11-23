@@ -1,0 +1,17 @@
+{
+  "frozen_at": "2026-11-23T04:21:17.152550+03:00",
+  "protocol_sha256": "7b4156e12323eaccf440add841bc267db24406908d7c11be0c92fe26cfd5945a",
+  "scientific_source_sha256": {
+    "observation_model.py": "26595b43b96ab80c306630dcb7e18253729d2726330b1f3692b3ecdfa09c3aea",
+    "observation_study.py": "520c419c2549cbd09d4564b7c591af62a56776fc59841677d6941d7db29c923f",
+    "attack.py": "5772ed74b605760c79fe96f5e42d0d6431cc5f92182a2ea0d77a7ea217125016",
+    "model.py": "5ba076f007ab7425039d4d2adf617c315668b7d26c55cfa53ab2787b5c05e45e",
+    "experiment.py": "58ba302f5870d43a1a7c5538d1889778d07470a1b94dbcdd5e3a897e4c4f6461"
+  },
+  "excluded_development_seeds": [
+    190000,
+    190001,
+    190009
+  ],
+  "scope": "Local pre-run lock; no external registration or independent timestamp attestation"
+}

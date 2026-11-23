@@ -1,0 +1,80 @@
+{
+  "profile": "repeat",
+  "design": {
+    "seed": 190032,
+    "devices": 16,
+    "bits": 64,
+    "budget": 4608,
+    "reads": 9,
+    "validation": 512,
+    "test": 8192,
+    "noise": 0.25,
+    "restarts": 4,
+    "penalties": [
+      1e-05,
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "maxiter": 1000,
+    "bootstrap": 8000
+  },
+  "protocol": {
+    "question": "Does the fraction-label advantage persist after accounting for the observation likelihood of a majority vote?",
+    "primary_contrast": [
+      "fraction",
+      "majority_aware"
+    ],
+    "primary_endpoint": "accuracy on independent single noisy test responses",
+    "secondary_contrasts": [
+      [
+        "majority_aware",
+        "majority_naive"
+      ],
+      [
+        "fraction",
+        "single"
+      ]
+    ],
+    "selection": "minimum single-response validation log loss; first minimum wins",
+    "normalization": "negative log likelihood per physical training query, omitting parameter-independent count constants",
+    "noise": 0.25,
+    "correlation": 0.0,
+    "chains": 2,
+    "bits": 64,
+    "budget": 4608,
+    "reads": 9,
+    "validation": 512,
+    "test": 8192,
+    "devices": 16,
+    "seeds": {
+      "main": 190031,
+      "repeat": 190032
+    },
+    "restarts": 4,
+    "penalties": [
+      1e-05,
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "maxiter": 1000,
+    "bootstrap": 8000,
+    "intervals": "paired percentile bootstrap over devices; primary 95%, secondary descriptive pointwise 95%",
+    "scope": "new simulated devices; local protocol fixed before these devices are generated, not an external preregistration"
+  },
+  "protocol_sha256": "7b4156e12323eaccf440add841bc267db24406908d7c11be0c92fe26cfd5945a",
+  "workers": 4,
+  "source_sha256": {
+    "observation_model.py": "26595b43b96ab80c306630dcb7e18253729d2726330b1f3692b3ecdfa09c3aea",
+    "observation_study.py": "520c419c2549cbd09d4564b7c591af62a56776fc59841677d6941d7db29c923f",
+    "attack.py": "5772ed74b605760c79fe96f5e42d0d6431cc5f92182a2ea0d77a7ea217125016",
+    "model.py": "5ba076f007ab7425039d4d2adf617c315668b7d26c55cfa53ab2787b5c05e45e",
+    "experiment.py": "58ba302f5870d43a1a7c5538d1889778d07470a1b94dbcdd5e3a897e4c4f6461"
+  },
+  "protocol_lock_sha256": "b54f5a0298bad087e514de8de3c84cb9dfbf6d05410d8926f02a67f89e22ea9a",
+  "python": "3.10.12",
+  "numpy": "2.2.6",
+  "scipy": "1.15.3",
+  "evaluation_only": "true_probability and clean use the simulator weights; never passed to fit"
+}

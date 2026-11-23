@@ -1,0 +1,223 @@
+{
+  "checked_at": "2026-11-23T13:26:46.107287+03:00",
+  "status": "passed",
+  "environment": {
+    "python": "3.10.12",
+    "install": "non-editable wheel; all installed scientific modules equal repository source",
+    "packages": {
+      "numpy": "2.2.6",
+      "scipy": "1.15.3",
+      "scikit-learn": "1.7.2",
+      "matplotlib": "3.8.4",
+      "python-docx": "1.2.0",
+      "python-pptx": "1.0.2",
+      "threadpoolctl": "3.8.0"
+    }
+  },
+  "unit_tests": {
+    "passed": 87,
+    "log_sha256": "6c3dca3f3253c13eafb733a51af24aeb3ac69cb96719414c2184b7a500653502"
+  },
+  "full_reproduction": {
+    "commands": [
+      "python -m puf_lab.reproduce --output build/final-clean-results-v1 --jobs 4 --query-workers 5 --pypuf-path build/pypuf-reference",
+      "python -m puf_lab.observation_study --profile main --workers 4 --output build/final-clean-results-v1/observation_study",
+      "python -m puf_lab.observation_study --profile repeat --workers 4 --output build/final-clean-results-v1/observation_study/repeat",
+      "python -m puf_lab.ivan_studies --workers 6 --output build/final-clean-results-v1/ivan"
+    ],
+    "execution": "The prior 139 artifacts were already reproduced in this clean environment. Their scientific modules are unchanged; only reproduce.py gained the Ivan entry point. The 3810 additional artifacts were reproduced from the updated non-editable wheel in the same environment. All 3949 deterministic artifacts were compared together; JSONL copies were independently checked against their CSV counterparts.",
+    "numerical_artifacts_compared": 3949,
+    "unequal_scientific_entries": 0,
+    "details": "reproduction.json"
+  },
+  "independent_audits": {
+    "attack_devices": 24,
+    "query_study_devices": 10,
+    "soft_label_devices": 10,
+    "optimizer_control_devices": 10,
+    "BER_device_ids": 10752,
+    "binary_information_designs": 24000,
+    "gaussian_information_identities": 9,
+    "scope": "regenerated data, independent partitions, physical budgets, saved-weight predictions, validation selection, metrics and paired intervals",
+    "observation_devices": 32,
+    "observation_candidate_models": 2048,
+    "observation_selected_models": 128,
+    "full_audit_log_sha256": "a10b2654941c42e538dc861ec0ccc5b3c4061c21341c7ca046abee4f3f488ff3",
+    "fresh_observation_audit_log_sha256": "a9980a3f1dbf8f3c9367152e6509c9916caeea0db9b0420415b21c2ece150b4f",
+    "ivan_fixed_repeat_devices": 100,
+    "ivan_adaptive_repeat_devices": 100,
+    "ivan_fitted_models": 3500,
+    "ivan_original_audit_log_sha256": "aba258301037b27bb6a2b2436f030f1c5db68030f215feec39c4f77c02c9331a",
+    "ivan_reproduced_audit_log_sha256": "aba258301037b27bb6a2b2436f030f1c5db68030f215feec39c4f77c02c9331a"
+  },
+  "reference_simulator": {
+    "reference": "pypuf",
+    "version": "3.2.1",
+    "seed": 90412,
+    "devices": 16,
+    "challenge_bits": 64,
+    "chains": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "compared_response_bits": 262144,
+    "mismatches": 0,
+    "scope": "identical weights and noiseless queries; feature transform and final XOR",
+    "weight_sampling": "our generator; equivalence of random weight distributions not claimed"
+  },
+  "figures": {
+    "byte_identical_after_reproduction": 30,
+    "sha256": {
+      "attack/learning_curves.png": "d7d9da879f3bdaf0c20f2893dfd6dea836533e730ff07c13682578329a156409",
+      "attack/repeat/learning_curves.png": "982c1c5b67c2b4ea848e13a94fa6c1e8f4edd0344ab501bc93d597e8269e3acf",
+      "binary_information/binary_information.png": "2220a934433c8cf2828434f4173833e13230bc8aa968f79272c189427912318a",
+      "binary_information/repeat/binary_information.png": "f0a86a8763eebd1b5133891bc24f2f6c21b3da98d8762f4d039a06eb64ca6d15",
+      "calibration/calibration.png": "5d7538b7b8dd23b1f14441e1a4fb4c4c0547305d71eddd534ba9cf16ead7eba7",
+      "calibration/equal-span/calibration.png": "1cb0e42ad02f408cfa15f08b123a4df0bbaf27171d427d513e85d312a4dafbeb",
+      "calibration/equal-span/repeat/calibration.png": "f328ee7c433e995ceeb3c2a42d25263c7c31993260479e73679eec1a3d006b92",
+      "calibration/repeat/calibration.png": "307dc93c4850b8300262fdd2abf85afd27fef7f9f10d6a951272875ada6906ef",
+      "forecast/forecast.png": "0a305de75ff8d1d33f59a4c1663a5d9e5035f00916b05c5b733180372af630cf",
+      "forecast/repeat/forecast.png": "48b96ca390f9b1cc48e8ed1aefc1cf69550745f3c47b14d358cf375d1eba70c9",
+      "forecast/repeat/transfer.png": "3b4a213c5d74b248c24acda382c47fcff4b4469a67a43ac801e2f01981ffc919",
+      "forecast/transfer.png": "a843116425807393bd20b631aedbac801878f64a984ad5cdcb80a1ca06d1eb8b",
+      "ivan/confirmation/primary_contrasts.png": "1c38b7bda82bb2c59e470c0c879bc8a11acdf9c5d969bedf7199489c83da4f0c",
+      "ivan/stopping/primary_contrasts.png": "1216a8e05a60e5d3a91082b8166555ba92d98ed31d391d7881f58ca5c65ea1e4",
+      "ivan/stopping/stopping_bias.png": "9cb0880b8911662186a2a910a992bdad06cf477b2e8d5705ba5425cd86959d04",
+      "measurement_budget.png": "2fb030130882c26136aa465555be6775f66b356d7d67d261307d8117a082a324",
+      "observation_study/observation_effects.png": "85d05d056792991cfc1bd2f688d5f3ccbc79e11e9c94f60e433868a2f1b5507d",
+      "observation_study/repeat/observation_effects.png": "d7cc5caafc013441b4811390544049c4f3add3cdeffb88f03412d585821c5e15",
+      "query_study/architecture_comparison.png": "586337728934249804481725de48b2768f0c536eac87aff438693ec06982bab7",
+      "query_study/query_budget.png": "c14b6ebaf55828c7f4071818ba322b0f271c10f13b14ade0a151a825fd059fa0",
+      "query_study/repeat/architecture_comparison.png": "dd17d871250753a73e93feabf7f8925501803ec203ac90ca6ce5df98dd6270ce",
+      "query_study/repeat/query_budget.png": "cf913e5abc23bd2e9bbdaae9fdc9b85d377a9afdb9fb719729dd7e6ab5133e7d",
+      "reference_points.png": "d4113c35fd0c5e5f46d5d8a666e3fe29566efbc0fb47ea09ea7ae4ec72012e5d",
+      "reliability.png": "63822fbc258dba6c8347bc70ac189a1aeac961a11bd3bc1f40c4b5656f46ebe4",
+      "replication/session_study.png": "ada71f814d69d24d1200767607f4d5ff6d51649749cbd66b205817fd8ba43da4",
+      "sensitivity/repeat/sensitivity.png": "0e47e7229756eda5a5d43ef0b311a9b5414c422e1c5bd3b0831b495bc40382f2",
+      "sensitivity/sensitivity.png": "c1c8224539a6893c0816ea358c28f2cc1abc662bfc776a87f9074f875b3f7d68",
+      "session_study.png": "a8092a3a37b4aa8e3181c0a9b3c59a6c712069ac78c8ea367ccd671543c7d142",
+      "soft_labels/repeat/soft_vs_majority.png": "b6d3ea0b3adfa8fea1f9a823aaf523de897ae79fd0a1e46f9c8687269a4ac28d",
+      "soft_labels/soft_vs_majority.png": "db721cbd97fa0a0357420e4584e8c9cdbd94869eb2ee80dc0ac4ef21b6ea2909"
+    }
+  },
+  "documents": {
+    "pages": {
+      "report.pdf": 33,
+      "slides.pdf": 29
+    },
+    "references": 23,
+    "tables_and_toc": "verified against canonical and freshly reproduced results",
+    "visual_review": "New fixed-repeat, stopping-theory and stopping-results pages and all three added slides inspected; table widths corrected; no overflow or clipping.",
+    "sha256": {
+      "report.docx": "d7de32c4b43e120ded59f726cb8f4114e145cb4c381dfc32dd4b8507bba37ddd",
+      "report.pdf": "0b0d9fb613e6faea1c6cfc9f2e8e9b5af68ac1e4b108d94306ac45336c52cbee",
+      "slides.pptx": "7aae8c0b6930b48501dee7b7e0259fbcee69a78bdc539043750eef6098b94876",
+      "slides.pdf": "8e4340a9181ca9e5ffb3ff250808d82f7f7a11c3165aeadbac9c062d1480098f"
+    }
+  },
+  "archive_source_check": {
+    "status": "passed",
+    "source": "separately extracted integrated submission archive",
+    "smoke_attack_devices": 2,
+    "smoke_query_devices": 2,
+    "smoke_soft_label_devices": 2,
+    "smoke_optimizer_devices": 2,
+    "smoke_BER_devices": 288,
+    "smoke_binary_designs": 600,
+    "identity": "archived scientific source, tests, configurations and scientific data equal the final workspace",
+    "smoke_observation_devices": 2,
+    "log_sha256": "144723fdcf1d372329bf3b4bac30d609fefdd74e3ee969971861bf9da9b00540",
+    "smoke_ivan_fixed_repeat_devices": 2,
+    "smoke_ivan_adaptive_repeat_devices": 2,
+    "smoke_ivan_fitted_models": 22
+  },
+  "requirements": {
+    "source": "DocsInfoBase.docx",
+    "source_sha256": "99c3029ebdee7529e4b73f4d10f3c00fcde112b30f83355dff48914c729654a3",
+    "matrix": "report/requirements.md",
+    "technical_deliverables": "implemented and checked",
+    "global_novelty": "not established",
+    "market_demand": "not established",
+    "seminarist_bonus_selection": "external decision",
+    "oral_defense": "not performed",
+    "maximum_grade_guaranteed": false
+  },
+  "scientific_source_sha256": {
+    "src/puf_attacks/__init__.py": "62c4b446384518b5d832ef833efdb11f0244fd73b0a519b5186cba9e0177ebb6",
+    "src/puf_attacks/analysis.py": "76fa552bda3881002595a9fdf00e8ae1848993fcd5b7e9f060310935097e966f",
+    "src/puf_attacks/cli.py": "d3c2a95b9a910901d521db2b4ea3523f74a15c2c644cadc84fc891da28231efd",
+    "src/puf_attacks/experiments.py": "a392c3ca5e934fec02530ae69e8d538d730c45b96c5d035842d2dd5a40dbba8a",
+    "src/puf_attacks/models.py": "f2766de93e707a3023d5909128b10644a4c6b2be9e469e6235967e4bccce3a82",
+    "src/puf_attacks/puf.py": "1a92240ac31f9ef9e76232e9f8e1bc596a60bfbcb310c0f5814e2092072dd940",
+    "src/puf_lab/__init__.py": "f7b96335a532bb2c9642de543861890ad8fcfa2ed6fd9ffd97a06842664e1b07",
+    "src/puf_lab/attack.py": "5772ed74b605760c79fe96f5e42d0d6431cc5f92182a2ea0d77a7ea217125016",
+    "src/puf_lab/attack_cli.py": "7d783400de48fdb12e49c2068dce4ec29923524a49b55c282f1eb706d03c3f81",
+    "src/puf_lab/binary_information.py": "05b71be8f2d0d8d847e6c67da2605ddcd81a02ec438a71eff4fbda6008f5345c",
+    "src/puf_lab/calibration.py": "cf740bb69461c8736f6b7a94e51a23e18e6fe196936749d6873aaff0093056de",
+    "src/puf_lab/calibration_cli.py": "13629f74730ad0c17fd6c3672b16c5f8e587bd405f74031e22ce7b17cb1e66bf",
+    "src/puf_lab/cli.py": "fb00cd69d4fc289800917434ae8fde0a3d9c2276a0d66cfec32e2cb2b1181c5f",
+    "src/puf_lab/config.py": "de084a2f07c182d9854bdf553eda44884839a46adcc765690dd326589ae44f57",
+    "src/puf_lab/control.py": "699019bee1d3970b3c749a3ab74f285c819a9e3eecff7199a102462935158965",
+    "src/puf_lab/defensive_auth.py": "e143fc1ee014abd83fe2a6d02482c9f91b410b926130a29a081a1a0bcbd2c049",
+    "src/puf_lab/experiment.py": "58ba302f5870d43a1a7c5538d1889778d07470a1b94dbcdd5e3a897e4c4f6461",
+    "src/puf_lab/forecast.py": "0184dacaced44de81fe46f6a537cb15cc1d33209b859ba0d0cc42d1da037155e",
+    "src/puf_lab/forecast_cli.py": "3bcb5110b76010a95267992dc6fc831982b0e27157a880f4520e6e01bf7dde6d",
+    "src/puf_lab/information.py": "e14322d6005fb4165467b20f68356153b79fd73e3b56c0e09dbad2b62d99a098",
+    "src/puf_lab/ivan_studies.py": "c740184bd70baa7d1d2ed24896d219461a0039bf15a7b69b83885fb0dddb396e",
+    "src/puf_lab/model.py": "5ba076f007ab7425039d4d2adf617c315668b7d26c55cfa53ab2787b5c05e45e",
+    "src/puf_lab/observation_model.py": "26595b43b96ab80c306630dcb7e18253729d2726330b1f3692b3ecdfa09c3aea",
+    "src/puf_lab/observation_study.py": "520c419c2549cbd09d4564b7c591af62a56776fc59841677d6941d7db29c923f",
+    "src/puf_lab/optimizer_control.py": "2815eb10d4236179f7f921ce2573b50e9979f866e999195a0ab631a0a7f6ed0c",
+    "src/puf_lab/plots.py": "c649dd21983f8a49d030fa3200eff9f7367be786e0ac4d640ddd9e2aabd9d40b",
+    "src/puf_lab/query_study.py": "afd985aab67ae8387deca6fff8070c2fcab60c499012898d02810b365a4fe5fb",
+    "src/puf_lab/reference_check.py": "775e613007621385b17e4a345c2840381dfdc5af38d1581d9f3ac34c8fa1f238",
+    "src/puf_lab/reproduce.py": "1c82e2549983fce238e543eb5615fd0897344b846a1c7dceaddf48bd2dfaa4a5",
+    "src/puf_lab/sensitivity.py": "e4b97fac511d90e84c81463c9a1e706762d044e8ca4bfc037943c803af41c107",
+    "src/puf_lab/sensitivity_cli.py": "2f2acf6715af9f46515feca6a75817478c85c66ea70341272935f3f2df712f25",
+    "src/puf_lab/session.py": "43e68ec4b61167e9d8e97dc7a37b7aafc36dfb99425c0d385dc411d59787cfdc",
+    "src/puf_lab/session_cli.py": "bbee0e4fbff984c0fa742ebd897570765d3c3fd91a6b32541963222c2cd7c6d5",
+    "src/puf_lab/soft_labels.py": "8c6dd2d4de3208aab81670b16fb7652e0c3df6cae6d71c3a33f05307ec26915c",
+    "src/puf_lab/summary.py": "1e2a5b4a39224b72a739e608779c7150687a2dde52f5a48a21ddbf406a75da35"
+  },
+  "observation_protocol": {
+    "local_lock_sha256": "b54f5a0298bad087e514de8de3c84cb9dfbf6d05410d8926f02a67f89e22ea9a",
+    "external_preregistration": false,
+    "protocol_sha256": "7b4156e12323eaccf440add841bc267db24406908d7c11be0c92fe26cfd5945a",
+    "all_selected_models_converged": true,
+    "primary_endpoint": "fraction minus majority_aware observed test accuracy",
+    "main_seed": 190031,
+    "repeat_seed": 190032,
+    "devices_per_seed": 16,
+    "primary_results_probability_units": {
+      "main": {
+        "difference": 0.054473876953125,
+        "ci_low": 0.04718017578125,
+        "ci_high": 0.06149311065673828
+      },
+      "repeat": {
+        "difference": 0.0511627197265625,
+        "ci_low": 0.04676036834716797,
+        "ci_high": 0.055755615234375
+      }
+    }
+  },
+  "ivan_integration": {
+    "branch": "Ivan",
+    "commit": "b8d12e7d7f638fd3846538d0a72da4ef2ebc1dee",
+    "scientific_source_preserved": true,
+    "source_manifest": "configs/ivan/origin.json",
+    "original_vs_recomputed_metrics": "ivan_branch_comparison.json",
+    "prior_model_and_experiment_modules_unchanged": true,
+    "changed_orchestration_files": [
+      "src/puf_lab/reproduce.py"
+    ],
+    "prior_source_snapshot_sha256": "dc0462b36ae7e763ab310b27727dab4a3c79d0c0430638d483c6070f456b791b",
+    "replication_same_devices_not_new_cohort": true,
+    "fixed_repeat_primary_endpoint": "clean response accuracy; 2 paired Bonferroni contrasts",
+    "adaptive_primary_endpoint": "probability MSE; 8 paired Bonferroni contrasts",
+    "external_preregistration": false,
+    "global_novelty": "not established"
+  }
+}

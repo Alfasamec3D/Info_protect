@@ -1,0 +1,40 @@
+{
+  "profile": "main",
+  "seed": 729301,
+  "devices": 12,
+  "bits": 64,
+  "budgets": [
+    256,
+    1024,
+    4096
+  ],
+  "chains": [
+    1,
+    2,
+    4
+  ],
+  "noises": [
+    0.0,
+    0.1
+  ],
+  "validation": 512,
+  "test": 2048,
+  "restarts": 3,
+  "maxiter": 250,
+  "bootstrap": 4000,
+  "data_origin": "synthetic additive-delay model",
+  "target": "final XOR bit on unseen challenges of the SAME device",
+  "selection": "restart chosen by validation accuracy; no test tuning or retraining",
+  "regularization": 0.0001,
+  "linear_C": 1.0,
+  "intervals": "pointwise paired percentile bootstrap over independent devices; not simultaneous",
+  "independent_repeat": "new device weights, challenges, noise and optimizer starts",
+  "source_sha256": {
+    "attack.py": "5772ed74b605760c79fe96f5e42d0d6431cc5f92182a2ea0d77a7ea217125016",
+    "model.py": "5ba076f007ab7425039d4d2adf617c315668b7d26c55cfa53ab2787b5c05e45e"
+  },
+  "python": "3.10.12",
+  "numpy": "2.2.6",
+  "scipy": "1.15.3",
+  "scikit_learn": "1.7.2"
+}

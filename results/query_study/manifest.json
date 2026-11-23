@@ -1,0 +1,55 @@
+{
+  "seed": 829301,
+  "devices": 5,
+  "bits": 64,
+  "budgets": [
+    4608,
+    18432
+  ],
+  "chains": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "noises": [
+    0.0,
+    0.25
+  ],
+  "validation": 512,
+  "test": 2048,
+  "restarts": 2,
+  "maxiter": 180,
+  "bootstrap": 4000,
+  "repeat_counts": [
+    1,
+    3,
+    9
+  ],
+  "repeat_correlations": [
+    0.0,
+    0.9
+  ],
+  "research_question": "distinct challenges versus majority repeats at equal physical-query budget",
+  "correlation_model": "equicorrelated Gaussian read noise conditional on challenge and chain; independent across challenges",
+  "test_queries_excluded_from_attacker_budget": 2048,
+  "mlp": {
+    "hidden": [
+      64,
+      32
+    ],
+    "activation": "tanh",
+    "epochs": 40,
+    "batch_size": 1024,
+    "alpha": 0.001
+  },
+  "time_scope": "wall time of all restarts, validation selection and test prediction; excludes generation",
+  "threshold_scope": "first observed grid point reaching 95%, not a certified minimum or confidence bound",
+  "source_sha256": "afd985aab67ae8387deca6fff8070c2fcab60c499012898d02810b365a4fe5fb",
+  "python": "3.10.12",
+  "numpy": "2.2.6",
+  "sklearn": "1.7.2",
+  "platform": "Linux-5.15.0-204-generic-x86_64-with-glibc2.35",
+  "machine": "x86_64",
+  "workers": 5
+}

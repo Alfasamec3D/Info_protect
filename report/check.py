@@ -14,6 +14,14 @@ from pptx import Presentation
 from build import MODELS, REGIMES, TRANSFER_CASES, bounds, gain_ci, load_data, pct, read_csv
 from puf_lab.defensive_auth import demo
 from puf_lab.experiment import stream
+from check_attack import check as verify_attack
+from export import page_map
+from check_query_study import check as verify_queries
+from check_soft_labels import check as verify_soft_labels
+from check_binary_information import check as verify_binary_information
+from check_optimizer_control import check as verify_optimizer_control
+from check_observation_study import check as verify_observation
+from check_ivan import check as verify_ivan
 
 
 def within(actual, expected):
@@ -105,6 +113,8 @@ def verify_documents(directory, main, repeat, results):
         with ZipFile(directory / name) as archive:
             assert archive.testzip() is None
     document = Document(directory / "report.docx")
+    for title, page_number in page_map(directory / "report.pdf").items():
+        assert f"{title}\t{page_number}" in [p.text for p in document.paragraphs]
     deck = Presentation(directory / "slides.pptx")
     methods = ("ridge", "boosting")
     errors = [
@@ -146,7 +156,57 @@ def verify_documents(directory, main, repeat, results):
     ]
     assert table_rows(document, ["Обучение → проверка", "Модель",
                                  "Основной, п. п.", "Повтор, п. п."]) == transfer
-    assert len(deck.slides) == 14
+    assert len(deck.slides) == 29
+    from ivan_sections import confirmation_rows, stopping_rows, result_sentence
+    assert table_rows(document, ['Стратегия','Чистая accuracy, %','Ожидаемая шумная, %','Разных запросов']) == confirmation_rows(data)
+    assert table_rows(document, ['σ','B','M','Доли','С учётом N','Снижение, %','ДИ разности × 10³']) == stopping_rows(data)
+    assert result_sentence(data) in [p.text for p in document.paragraphs]
+    from observation_sections import LABELS, metric as observation_metric, contrast, interval
+    assert table_rows(document, ['Метод','Основная серия, %','Повтор, %','Сошлись, осн. / повт.']) == [
+        [label,pct(observation_metric(data,method)['accuracy']),pct(observation_metric(data,method,True)['accuracy']),
+         f"{observation_metric(data,method)['selected_converged']} / {observation_metric(data,method,True)['selected_converged']}"]
+        for method,label in LABELS.items()]
+    assert table_rows(document, ['Контраст','Основная серия, п. п.','Повтор, п. п.']) == [
+        [f'{LABELS[a]} − {LABELS[b]}',interval(contrast(data,a,b)),interval(contrast(data,a,b,True))]
+        for a,b in (('fraction','majority_aware'),('majority_aware','majority_naive'),('fraction','single'))]
+    controls=table_rows(document,["Настройка","Большинство, %","Доли, %","Разность, п. п.","Повтор, п. п."])
+    assert len(controls)==4
+    for row,a,b in zip(controls,data['extensions']['optimizer'],data['extensions']['optimizer_repeat']):
+        assert row[1]==pct(a['majority_accuracy']) and row[2]==pct(a['fraction_accuracy'])
+        for value,expected in ((row[3],a),(row[4],b)):
+            assert value==f"{pct(expected['paired_gain'])} [{pct(expected['ci_low'])}; {pct(expected['ci_high'])}]"
+    from extension_sections import soft, effect as soft_effect
+    assert table_rows(document, ["k", "r", "ρ", "Доли − большинство, п. п.", "Повтор, п. п."]) == [
+        [str(k), str(r), str(rho).replace('.', ','), soft_effect(soft(data,k,r,rho)),
+         soft_effect(soft(data,k,r,rho,repeated=True))]
+        for k in (1,2) for r in (3,9) for rho in (0.,.9)
+    ]
+    binary_rows=table_rows(document,["r","Основная серия","Другой PUF","Теория"])
+    assert len(binary_rows)==3
+    for row, first, second in zip(binary_rows,data['extensions']['binary'],data['extensions']['binary_repeat']):
+        for value, expected in zip(row[1:3],(first,second)):
+            wanted=f"{float(expected['variance_ratio']):.2f} [{float(expected['variance_ratio_low']):.2f}; {float(expected['variance_ratio_high']):.2f}]".replace('.',',')
+            assert value==wanted
+    from query_sections import item, effect
+    assert table_rows(document, ["k", "r", "ρ", "Основная серия, п. п.", "Повтор, п. п."]) == [
+        [str(k), str(r), str(rho).replace('.', ','), effect(item(data,k,r,rho)),
+         effect(item(data,k,r,rho,repeated=True))]
+        for k in (1,2) for r in (3,9) for rho in (0.,.9)
+    ]
+    assert table_rows(document, ["k", "Произведение, %", "MLP, %", "Время prod / MLP, с"]) == [
+        [str(k), f"{pct(item(data,k,noise=0.)['accuracy'])} / {pct(item(data,k,noise=0.,repeated=True)['accuracy'])}",
+         f"{pct(item(data,k,noise=0.,model='mlp')['accuracy'])} / {pct(item(data,k,noise=0.,model='mlp',repeated=True)['accuracy'])}",
+         f"{float(item(data,k,noise=0.)['fit_seconds']):.1f} / {float(item(data,k,noise=0.,model='mlp')['fit_seconds']):.1f}"]
+        for k in (1,2,3,4)
+    ]
+    attack_table = table_rows(document, ["k", "σ", "Основная серия, %", "Повтор, %", "Выигрыш, п. п."])
+    assert len(attack_table) == 6
+    from build import attack_cell
+    for row, (k, noise) in zip(attack_table, ((k, n) for k in (1, 2, 4) for n in (0., .1))):
+        first_attack = attack_cell(data, k, noise)
+        second_attack = attack_cell(data, k, noise, repeated=True)
+        assert row[2] == f"{pct(first_attack['accuracy'])} [{bounds(first_attack, 'ci_low', 'ci_high')}]"
+        assert row[3] == f"{pct(second_attack['accuracy'])} [{bounds(second_attack, 'ci_low', 'ci_high')}]"
     slide = " ".join(shape.text for shape in deck.slides[10].shapes if shape.has_text_frame)
     assert pct(data["transfer"]["volatile", "stable", "ridge"]["mae"]) in slide
     protection_slide = " ".join(
@@ -166,20 +226,57 @@ def verify_documents(directory, main, repeat, results):
         )
         assert all(pct(table["volatile", method]["mae"]) in text
                    for table in (main, repeat) for method in ("baseline", "ridge"))
-        assert "открыт" in text.lower() and "HMAC-SHA-256" in text
+        assert "HMAC-SHA-256" in text
+        assert pct(attack_cell(data, 2, .1)["accuracy"]) in text
+        assert pct(attack_cell(data, 2, .1, repeated=True)["accuracy"]) in text
+        assert pct(soft(data,2,9,0.)['accuracy']) in text
+        assert pct(contrast(data)['difference']) in text
+        assert pct(contrast(data,repeated=True)['difference']) in text
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--results", type=Path, default=Path("results"))
     parser.add_argument("--report", type=Path, default=Path("report"))
+    parser.add_argument("--ivan-workers", type=int, default=4)
     args = parser.parse_args()
     main_ids, first = verify_numeric(args.results / "forecast")
     repeat_ids, second = verify_numeric(args.results / "forecast" / "repeat")
     assert main_ids.isdisjoint(repeat_ids)
+    attack_ids = verify_attack(args.results / "attack")
+    attack_repeat_ids = verify_attack(args.results / "attack" / "repeat")
+    assert attack_ids.isdisjoint(attack_repeat_ids)
+    query_ids = verify_queries(args.results / "query_study")
+    query_repeat_ids = verify_queries(args.results / "query_study" / "repeat")
+    assert query_ids.isdisjoint(query_repeat_ids)
+    soft_ids = verify_soft_labels(args.results / "soft_labels", args.results / "query_study")
+    soft_repeat_ids = verify_soft_labels(args.results / "soft_labels" / "repeat", args.results / "query_study" / "repeat")
+    assert soft_ids == query_ids and soft_repeat_ids == query_repeat_ids
+    optimizer_ids=verify_optimizer_control(args.results / "optimizer_control",args.results / "query_study",args.results / "soft_labels")
+    optimizer_repeat_ids=verify_optimizer_control(args.results / "optimizer_control" / "repeat",args.results / "query_study" / "repeat",args.results / "soft_labels" / "repeat")
+    assert optimizer_ids==query_ids and optimizer_repeat_ids==query_repeat_ids
+    observation_ids = verify_observation(args.results / 'observation_study')
+    observation_repeat_ids = verify_observation(args.results / 'observation_study/repeat')
+    assert observation_ids.isdisjoint(observation_repeat_ids)
+    assert (observation_ids | observation_repeat_ids).isdisjoint(query_ids | query_repeat_ids | attack_ids | attack_repeat_ids)
+    confirmation_ids = verify_ivan(args.results / 'ivan/confirmation', 'confirmation', args.ivan_workers, write_audit=True)
+    stopping_ids = verify_ivan(args.results / 'ivan/stopping', 'stopping', args.ivan_workers, write_audit=True)
+    assert confirmation_ids.isdisjoint(stopping_ids)
+    binary_count = verify_binary_information(args.results / "binary_information")
+    binary_count += verify_binary_information(args.results / "binary_information" / "repeat")
+    from puf_lab.information import verify
+    stored = read_csv(args.results / "reference", "information_bound")
+    assert len(stored) == 9
+    for row, expected in zip(stored, verify()):
+        for key, value in expected.items():
+            within(row[key], value)
     verify_documents(args.report, first, second, args.results)
     print(f"Verified {len(main_ids) + len(repeat_ids)} independent device IDs, "
-          "metric intervals, Office files and PDF exports.")
+          f"metric intervals, {len(attack_ids | attack_repeat_ids)} attack devices, "
+          f"{len(query_ids | query_repeat_ids)} query-study and soft-label devices, "
+          f"{binary_count} binary-information designs, Office files and PDF exports.")
+    print(f'Also verified the frozen-protocol study on {len(observation_ids | observation_repeat_ids)} new devices.')
+    print(f'Also verified Ivan studies: {len(confirmation_ids)} fixed-repeat and {len(stopping_ids)} adaptive-repeat devices, 3500 fitted models in full profiles.')
 
 
 if __name__ == "__main__":

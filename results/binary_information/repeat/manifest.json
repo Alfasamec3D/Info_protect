@@ -1,0 +1,22 @@
+{
+  "seed": 930302,
+  "bits": 64,
+  "budget": 576,
+  "trials": 4000,
+  "sigma": 0.75,
+  "repeats": [
+    1,
+    3,
+    9
+  ],
+  "bootstrap": 2000,
+  "quantity": "J_00 of binary probit response, fixed device, random challenge design",
+  "sampling": "IID uniform challenges with replacement; paired prefixes across r",
+  "scope": "one chain; known sigma; independent read noise; evaluator-only",
+  "source_sha256": {
+    "binary_information.py": "05b71be8f2d0d8d847e6c67da2605ddcd81a02ec438a71eff4fbda6008f5345c",
+    "model.py": "5ba076f007ab7425039d4d2adf617c315668b7d26c55cfa53ab2787b5c05e45e",
+    "experiment.py": "58ba302f5870d43a1a7c5538d1889778d07470a1b94dbcdd5e3a897e4c4f6461"
+  },
+  "numpy": "2.2.6"
+}

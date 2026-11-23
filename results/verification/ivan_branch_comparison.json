@@ -1,0 +1,55 @@
+{
+  "origin_commit": "b8d12e7d7f638fd3846538d0a72da4ef2ebc1dee",
+  "scope": "Compare every saved per-model scientific field; acquisition and model metrics independently audited in both trees. Exclude measured runtimes. Different dependency versions may alter floating point optimization.",
+  "studies": {
+    "confirmation": {
+      "models": 300,
+      "fields_with_differences": {
+        "noisy_accuracy": 89
+      },
+      "maximum_absolute_difference_by_numeric_field": {
+        "seed": 0,
+        "k": 0,
+        "budget": 0,
+        "noise": 0,
+        "repeats": 0,
+        "n": 0,
+        "train_unique": 0,
+        "queries_used": 0,
+        "validation_queries": 0,
+        "test_size": 0,
+        "accuracy": 0,
+        "noisy_accuracy": 2.220446049250313e-16,
+        "positive_prediction_rate": 0,
+        "test_positive_rate": 0,
+        "validation_selected_epochs": 0
+      }
+    },
+    "stopping": {
+      "models": 3200,
+      "fields_with_differences": {
+        "probability_mse": 2811,
+        "expected_accuracy": 1056,
+        "truth_confidence": 1008,
+        "expected_nll": 1291,
+        "mean_confidence": 1218
+      },
+      "maximum_absolute_difference_by_numeric_field": {
+        "seed": 0,
+        "sigma": 0,
+        "budget": 0,
+        "cap": 0,
+        "queries": 0,
+        "unique": 0,
+        "iterations": 0,
+        "probability_mse": 9.865047147228356e-13,
+        "expected_nll": 3.8794523149476845e-12,
+        "accuracy": 0,
+        "expected_accuracy": 4.440892098500626e-16,
+        "mean_confidence": 9.607314943593792e-12,
+        "truth_confidence": 1.1102230246251565e-16
+      }
+    }
+  },
+  "independent_original_audit_log_sha256": "aba258301037b27bb6a2b2436f030f1c5db68030f215feec39c4f77c02c9331a"
+}

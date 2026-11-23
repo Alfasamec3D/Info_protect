@@ -1,0 +1,31 @@
+{
+  "repository": "https://github.com/Alfasamec3D/Info_protect",
+  "branch": "Ivan",
+  "commit": "b8d12e7d7f638fd3846538d0a72da4ef2ebc1dee",
+  "verbatim_files_sha256": {
+    "src/puf_attacks/analysis.py": "76fa552bda3881002595a9fdf00e8ae1848993fcd5b7e9f060310935097e966f",
+    "src/puf_attacks/cli.py": "d3c2a95b9a910901d521db2b4ea3523f74a15c2c644cadc84fc891da28231efd",
+    "src/puf_attacks/experiments.py": "a392c3ca5e934fec02530ae69e8d538d730c45b96c5d035842d2dd5a40dbba8a",
+    "src/puf_attacks/models.py": "f2766de93e707a3023d5909128b10644a4c6b2be9e469e6235967e4bccce3a82",
+    "src/puf_attacks/puf.py": "1a92240ac31f9ef9e76232e9f8e1bc596a60bfbcb310c0f5814e2092072dd940",
+    "src/puf_attacks/__init__.py": "62c4b446384518b5d832ef833efdb11f0244fd73b0a519b5186cba9e0177ebb6",
+    "research/stopping/method.py": "dff6c3d3c45d1d67183a7d04f4ecf2abc9c2bf73f9e3629b15d6aee470e842a2",
+    "research/stopping/run.py": "ae61e66f12d52f92550ed0923123166c75557f6ee1f6677848b72eea25cee4a6",
+    "research/stopping/test_method.py": "39ab6f357c1b9bac6a96235266d4e0216fbf7b747aa01852d4f8444c60937999",
+    "research/stopping/protocol.json": "e6120d4d9e92a8666aa961c54d2a5719ecb712980587086a381dbcd6d78342f5",
+    "research/stopping/literature.json": "8bbf6cf5bcb5dc54b9425a08f48f8e73d96383703fed6d9dcf53f1847e3b81b1",
+    "configs/ivan/smoke.json": "048a83a4aaea42b87e36e1fa300ae62015fda045204706c9c80fba4e8a819c55",
+    "configs/ivan/confirmation.json": "2a994a1eadaaafc79a9236e2c6e985c511775acf9107b6b2c8ba7608d67cb194",
+    "configs/ivan/stopping_confirmatory.json": "dba4cbdd31d509427684945f06b49618884d7cf48e74bf1fe02e2c91cef9b446",
+    "configs/ivan/stopping_pilot.json": "966190b314fb2df58917f151139f25e9a7deee86ddc3f6dfbe839d65977d914e"
+  },
+  "adapted_files": {
+    "tests/test_ivan_core.py": "only the smoke config path changed"
+  },
+  "integrated_studies": [
+    "100-device fixed-repeat confirmation",
+    "100-device outcome-dependent stopping study"
+  ],
+  "selection": "The old 750-run baseline and Fisher study overlap existing studies and are not duplicated. All six original package modules are preserved for source fingerprint verification and standalone use.",
+  "scope": "Branch source authorship preserved; independent verification does not establish world priority or external preregistration."
+}

@@ -1,0 +1,17 @@
+{
+  "reference": "pypuf",
+  "version": "3.2.1",
+  "seed": 90412,
+  "devices": 16,
+  "challenge_bits": 64,
+  "chains": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "compared_response_bits": 262144,
+  "mismatches": 0,
+  "scope": "identical weights and noiseless queries; feature transform and final XOR",
+  "weight_sampling": "our generator; equivalence of random weight distributions not claimed"
+}

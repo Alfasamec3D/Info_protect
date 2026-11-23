@@ -3,17 +3,17 @@
 import argparse
 import hashlib
 from pathlib import Path
-import re
 from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
 ROOT = Path(__file__).resolve().parent.parent
-TOP_LEVEL = ("README.md", "LICENSE", "pyproject.toml", "constraints-study.txt")
+TOP_LEVEL = ("README.md", "LICENSE", "pyproject.toml", "constraints-study.txt", "DocsInfoBase.docx")
 SECTIONS = {
     "configs": {".json"},
     "src": {".py"},
     "tests": {".py"},
+    "research": {".py", ".json"},
     "report": {".py", ".md", ".csv", ".docx", ".pdf", ".pptx"},
-    "results": {".csv", ".json", ".png"},
+    "results": {".csv", ".json", ".jsonl", ".png", ".npz"},
 }
 
 
@@ -26,13 +26,7 @@ def contents():
 
 
 def public_bytes(path, name):
-    data = path.read_bytes()
-    if name == "report/requirements.md":
-        text = data.decode("utf-8")
-        return re.sub(r"\[рабочая программа дисциплины\]\(<\.\./[^>]+\.docx>\)",
-                      "рабочая программа дисциплины «Защита информации» (МФТИ)",
-                      text).encode("utf-8")
-    return data
+    return path.read_bytes()
 
 
 def write_file(zipfile, name, data):

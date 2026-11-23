@@ -17,7 +17,7 @@ from pptx.util import Inches, Pt as SlidePt
 
 
 TITLE = "Предсказуемость Arbiter PUF и надёжность следующей сессии"
-SUBTITLE = "Два сценария доступа и оценка BER на новых экземплярах"
+SUBTITLE = "Моделирование ответов по CRP и прогноз межсессионной надёжности"
 AUTHORS = "Иван Шаверин · Антон Хмельницкий · Максим Рачинский"
 REGIMES = {
     "stable": "Без дрейфа",
@@ -43,13 +43,28 @@ SECTIONS = (
     "7 Парные интервалы и интерпретация",
     "8 Перенос между режимами дрейфа",
     "9 Как вспомогательные эксперименты объясняют выводы",
+    "10 Собственная атака: метод и протокол",
+    "11 Собственная атака: результаты и ограничения",
+    "12 Равный бюджет запросов: постановка",
+    "13 Равный бюджет запросов: результаты",
+    "14 Нейросеть и расширение до 3-XOR",
+    "15 Собственный вклад и границы новизны",
+    "16 Информационный предел повторных измерений",
+    "17 Доли ответов вместо большинства",
+    "18 Информация бинарных ответов и случайный дизайн",
+    "19 Чувствительность к обучению и регуляризации",
+    "20 Вероятность голосования: независимый протокол",
+    "21 Вероятность голосования: результаты",
+    "22 Независимая проверка фиксированных повторов",
+    "23 Адаптивные повторы: смещение и правдоподобие",
+    "24 Адаптивные повторы: независимая проверка",
     "Заключение",
     "Приложение. Проверка одноразового запроса",
     "Приложение. Проверка требований",
     "Список источников",
 )
 SOURCES = [
-    "Рабочая программа дисциплины «Защита информации», МФТИ. Фонд оценочных средств, разделы 3–5. Файл РУП ЗИ (3) последний.docx.",
+    "Рабочая программа дисциплины «Защита информации», МФТИ. Фонд оценочных средств, разделы 3–5. Локальная копия: DocsInfoBase.docx.",
     "Переписка группы по курсовому проекту «Защита информации». https://chatgpt.com/s/cx_6afd9a1bfd5881919dc4c94e7f42e22c",
     "Hospodar G., Maes R., Verbauwhede I. Machine Learning Attacks on 65nm Arbiter PUFs: Accurate Modeling Poses Strict Bounds on Usability. IEEE WIFS, 2012, разд. III, рис. 1(a)–(b). https://cosicdatabase.esat.kuleuven.be/backend/publications/files/conferencepaper/2264",
     "Rührmair U. et al. PUF Modeling Attacks on Simulated and Silicon Data. IEEE TIFS, 2013, vol. 8, no. 11, pp. 1876–1891, табл. XI. https://sharps.org/wp-content/uploads/RUHRMAIR-TIFS13.pdf",
@@ -63,6 +78,15 @@ SOURCES = [
     "scikit-learn 1.7. HistGradientBoostingRegressor. https://scikit-learn.org/1.7/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html",
     "Krawczyk H., Bellare M., Canetti R. HMAC: Keyed-Hashing for Message Authentication. RFC 2104. https://www.rfc-editor.org/rfc/rfc2104",
     "NIST SP 800-63B-4. Digital Identity Guidelines. Authentication and Authenticator Management. Разделы о криптографических аутентификаторах и одноразовых запросах. https://pages.nist.gov/800-63-4/sp800-63b.html",
+    "Becker G. T. The Gap Between Promise and Reality: On the Insecurity of XOR Arbiter PUFs. CHES 2015, pp. 535–555. https://www.iacr.org/archive/ches2015/92930517/92930517.pdf",
+    "scikit-learn 1.7. MLPClassifier. https://scikit-learn.org/1.7/modules/generated/sklearn.neural_network.MLPClassifier.html",
+    "Tobisch J., Aghaie A., Becker G. T. Combining Optimization Objectives: New Modeling Attacks on Strong PUFs. TCHES, 2021(2), pp. 357–389, разд. 6.3, рис. 8. https://doi.org/10.46586/tches.v2021.i2.357-389",
+    "PUF Side-Channel Modeling Attack Based on Confidence Weighting of Response Repeatability. ITC-Asia, 2026. Проверена аннотация издателя; полный текст недоступен. https://doi.org/10.1109/ITC-Asia71864.2026.11710904",
+    "Dumoulin V., Rao W., Devroye N. Active Learning for Fast and Slow Modeling Attacks on Arbiter PUFs. DSD, 2023. https://arxiv.org/abs/2308.13645",
+    "Delvaux J., Verbauwhede I. Side Channel Modeling Attacks on 65nm Arbiter PUFs Exploiting CMOS Device Noise. HOST, 2013, разд. III–V, рис. 7. https://cosicdatabase.esat.kuleuven.be/backend/publications/files/conferencepaper/2344",
+    "Li G., Zhuang Y. A Low-Dimension High-Fidelity Reliability Representation for Reliability-based Machine Learning Modeling of Physical Unclonable Functions. 2024, arXiv:2405.13147v2. https://arxiv.org/html/2405.13147v2",
+    "Milanzi E. et al. Properties of Estimators in Exponential Family Settings with Observation-based Stopping Rules. J Biom Biostat, 2016, 7(1):272. https://pmc.ncbi.nlm.nih.gov/articles/PMC4861245/",
+    "Whitehead J. On the Bias of Maximum Likelihood Estimation Following a Sequential Test. Biometrika, 1986, 73(3), pp. 573–581. Проверена аннотация. https://doi.org/10.1093/biomet/73.3.573",
 ]
 
 
@@ -77,6 +101,26 @@ def pct(value, digits=2):
 
 def cell(rows, **keys):
     return next(row for row in rows if all(float(row[key]) == val for key, val in keys.items()))
+
+
+def attack_cell(data, chains, noise, model="product", budget=4096, repeated=False):
+    rows = data["attack_repeat" if repeated else "attack"]
+    return next(r for r in rows if int(r["chains"]) == chains and float(r["noise"]) == noise
+                and int(r["train_crps"]) == budget and r["model"] == model)
+
+
+def attack_interpretation(data):
+    single = attack_cell(data, 1, .1)
+    double = attack_cell(data, 2, .1)
+    four = attack_cell(data, 4, .1)
+    linear = attack_cell(data, 2, .1, "linear")
+    null = attack_cell(data, 2, .1, "shuffled")
+    return (f"При σ = 0,1 модель произведения получила {pct(single['accuracy'])}% для Arbiter, "
+            f"{pct(double['accuracy'])}% для 2-XOR и {pct(four['accuracy'])}% для 4-XOR. "
+            f"Для 2-XOR линейная модель дала {pct(linear['accuracy'])}%, контроль с перемешиванием — "
+            f"{pct(null['accuracy'])}%. Результат зависит от архитектуры и бюджета обучения; "
+            "точные значения повтора приведены в таблице. Отсутствие физического доступа после "
+            "сбора CRP само по себе не обеспечивает непредсказуемость.")
 
 
 def set_word_style(style, size, bold=False):
@@ -130,7 +174,7 @@ def centered(doc, text, size=12, before=0, bold=False):
     return p
 
 
-def table(doc, headings, body):
+def table(doc, headings, body, widths=None):
     grid = doc.add_table(rows=0, cols=len(headings))
     grid.style = "Table Grid"
     for line in [headings, *body]:
@@ -144,20 +188,29 @@ def table(doc, headings, body):
             run = p.add_run(str(value))
             run.bold = line is headings
             run.font.size = Pt(11)
+    if widths:
+        grid.autofit = False
+        for column, width in zip(grid.columns, widths):
+            column.width = Cm(width)
+        for row in grid.rows:
+            for box, width in zip(row.cells, widths):
+                box.width = Cm(width)
+    return grid
 
 
 def figure(doc, image, caption):
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p.paragraph_format.first_line_indent = Cm(0)
+    p.paragraph_format.space_before = Pt(6)
     p.paragraph_format.keep_with_next = True
     p.add_run().add_picture(str(image), width=Cm(16))
     centered(doc, caption, size=11)
 
 
 def new_page(doc, title):
-    doc.add_page_break()
-    doc.add_heading(title)
+    heading = doc.add_heading(title)
+    heading.paragraph_format.page_break_before = True
 
 
 def bounds(row, lo, hi, digits=2):
@@ -173,6 +226,9 @@ def gain_ci(row, digits=3):
 
 
 def build_word(output, results, data):
+    from query_sections import item as query_item, effect
+    from extension_sections import soft as soft_cell, effect as soft_effect
+    from observation_sections import conclusion as observation_conclusion, contrast as observation_contrast
     doc = create_word()
     p = doc.add_paragraph
     source = data["main"]
@@ -192,10 +248,15 @@ def build_word(output, results, data):
     centered(doc, "Долгопрудный, 2026", before=75)
 
     new_page(doc, "РЕФЕРАТ")
-    p("Работа проверяет, достаточно ли отсутствия физического доступа к Arbiter PUF или XOR Arbiter PUF для непредсказуемости ответов. Для независимого нового экземпляра без его пар запрос–ответ получено условие равновероятности и проведены проверки симулятора с нарушением симметрии. Для сценария с историческими парами сопоставлены первичные публикации на аппаратных данных.")
-    p(f"В собственной ML-части целевой величиной служит агрегированная доля ошибок следующей сессии. Сравниваются правило текущего BER, Ridge и градиентный бустинг. При изменчивом дрейфе Ridge снизила MAE с {pct(base['mae'])} до {pct(case['mae'])} п. п. При устойчивом дрейфе интервалы выигрыша включают ноль. Независимый повтор выполнен с новыми экземплярами.")
-    p("Проверены воспроизводимость результатов, разбиение по экземплярам и согласованность чисел отчёта с итоговыми таблицами.")
-    p("Ключевые слова — PUF, Arbiter, XOR, CRP, BER, градиентный бустинг, дрейф, воспроизводимость.")
+    p("Работа проверяет, достаточно ли отсутствия физического доступа к Arbiter PUF или XOR Arbiter PUF для непредсказуемости ответов. Для независимого нового экземпляра без его пар запрос–ответ получено условие равновероятности и проведены проверки симулятора с нарушением симметрии. Для сценария с историческими парами реализована собственная атака на симулированные 64-битные Arbiter и XOR Arbiter PUF; отдельно сопоставлены первичные публикации на аппаратных данных.")
+    p(f"В дополнительной ML-задаче целевой величиной служит агрегированная доля ошибок следующей сессии. Сравниваются правило текущего BER, Ridge и градиентный бустинг. При изменчивом дрейфе Ridge снизила MAE с {pct(base['mae'])} до {pct(case['mae'])} п. п. При устойчивом дрейфе интервалы выигрыша включают ноль. Независимый повтор выполнен с новыми экземплярами.")
+    p("Отдельно исследован равный бюджет разных запросов и повторных чтений при независимом и коррелированном шуме. Сравнение расширено до 3-XOR и MLP; сохранены модели и время обучения. Проверены воспроизводимость, разбиение данных и согласованность чисел отчёта с итоговыми таблицами.")
+    p(f"При 18432 обучающих CRP без шума точность атаки на 4-XOR составила {pct(query_item(data,4,noise=0.)['accuracy'])}%, в независимом повторе — {pct(query_item(data,4,noise=0.,repeated=True)['accuracy'])}%. При равном бюджете для 2-XOR с шумом σ = 0,25 девять коррелированных чтений (ρ = 0,9) снизили точность относительно разных запросов на {pct(-float(query_item(data,2,9,.9)['gain_over_single']))} п. п.; в повторе снижение составило {pct(-float(query_item(data,2,9,.9,repeated=True)['gain_over_single']))} п. п. Оба парных 95%-х интервала исключают ноль.")
+    p(f"Сохранение долей ответов вместо большинства при том же бюджете повысило точность 2-XOR на {pct(soft_cell(data,2,9,0.)['gain_over_majority'])} п. п.; независимый повтор — {pct(soft_cell(data,2,9,0.,repeated=True)['gain_over_majority'])} п. п. После усиления оптимизации и регуляризации выигрыш составил {pct(data['extensions']['optimizer'][-1]['paired_gain'])} и {pct(data['extensions']['optimizer_repeat'][-1]['paired_gain'])} п. п. соответственно. Для бинарной probit-модели выведены тождества среднего и ковариации условной информации; численная проверка охватывает 24000 случайных планов запросов.")
+    p(observation_conclusion(data))
+    from ivan_sections import result_sentence as ivan_conclusion
+    p(ivan_conclusion(data))
+    p("Ключевые слова — PUF, Arbiter, XOR, CRP, BER, дрейф, правдоподобие голосования, воспроизводимость.")
 
     new_page(doc, "СОДЕРЖАНИЕ")
     for number, name in enumerate(SECTIONS, 4):
@@ -210,7 +271,7 @@ def build_word(output, results, data):
     p("Рабочая программа дисциплины формулирует тему № 12 как «Реализация атак на PUF» [1]. В переписке группа предложила выяснить, достаточно ли отсутствия физического доступа, чтобы ответы PUF оставались непредсказуемыми [2].")
     p("Физически неклонируемая функция сопоставляет входному запросу ответ, который зависит от параметров конкретного устройства. В Arbiter PUF знак разности двух задержек определяет бит. XOR объединяет ответы нескольких цепочек. Открытый запрос обозначим C, итоговый бит — Y, а информацию наблюдателя — Z.")
     p("В первом сценарии наблюдатель никогда не имел пар этого экземпляра и не может его читать. Он знает текущий запрос и, возможно, статистику партии. Во втором сценарии физического доступа в момент предсказания нет, однако имеются ранее измеренные пары того же экземпляра. Эти постановки задают разные условные распределения P(Y | C, Z).")
-    p("Самостоятельный вычислительный вопрос касается качества измерений. Можно ли по агрегатам калибровочной сессии прогнозировать долю ошибок следующей сессии на экземплярах, которые не использовались для обучения и выбора модели? Наблюдаемое Y в этом эксперименте — одно число BER на устройство и сессию.")
+    p("Основной эксперимент обучает модель итогового ответа на старых CRP и проверяет её на новых запросах того же устройства. Дополнительный вычислительный вопрос касается качества измерений. Можно ли по агрегатам калибровочной сессии прогнозировать долю ошибок следующей сессии на экземплярах, которые не использовались для обучения и выбора модели? Наблюдаемое Y в этом эксперименте — одно число BER на устройство и сессию.")
     p("Максим отвечает за симулятор и агрегирование. Иван отвечает за сравнение моделей и анализ публикаций. Антон отвечает за план эксперимента, статистику и воспроизводимость. На защите каждый показывает свой технический блок, исходные результаты и ограничения.")
 
     new_page(doc, SECTIONS[1].upper())
@@ -257,6 +318,10 @@ def build_word(output, results, data):
 
     new_page(doc, SECTIONS[4].upper())
     p("Для собственного эксперимента используется нормированная аддитивная модель задержек [7, 9]. Один набор весов задаёт один экземпляр на обе сессии. Как метрику повторяемости применяем долю расхождений шумного чтения с чистым ответом симулятора [8]. Эталон доступен в стенде, а при аппаратном переносе потребуется отдельная процедура его формирования.")
+    reference_path = results / "reference" / "pypuf_check.json"
+    if reference_path.exists():
+        reference = json.loads(reference_path.read_text())
+        p(f"Внешняя проверка: pypuf {reference['version']}, {reference['compared_response_bits']} итоговых битов для {reference['devices']} устройств, k = 1, 2, 3, 4. Число расхождений — {reference['mismatches']}. Использованы одинаковые веса и запросы; распределения генераторов весов этим сравнением не приравниваются. Протокол: results/reference/pypuf_check.json.")
     p("Для каждого экземпляра выбираются 1, 2 или 4 цепочки с равными вероятностями. Стандартное отклонение шума чтения выбирается равномерно от 0,04 до 0,14 и остаётся неизменным у данного экземпляра. При условии параметров устройства ошибки отдельных чтений задаются независимыми гауссовскими возмущениями.")
     p("Сдвиг S одинаков для всех чтений одной цепочки в данной сессии. Он обновляется между соседними сессиями по стационарной AR(1). Параметры режима обозначены τ для масштаба сдвига и η для корреляции соседних сессий.")
     centered(doc, "S₁ = ηS₀ + U₁,   U₁ ~ N(0, τ²(1 − η²)).")
@@ -327,17 +392,62 @@ def build_word(output, results, data):
     p("На железе потребуются повторные измерения нескольких экземпляров, независимые сессии, контроль условий и эталон, качество которого измеряется самостоятельно. Численные показатели симуляции зависят от выбранного распределения дрейфа и конкретной модели чистого ответа.")
 
     new_page(doc, SECTIONS[10].upper())
-    p("При отсутствии пар конкретного экземпляра симметричный независимый ансамбль даёт вероятность угадывания 50% даже при доступе к текущему запросу. Контроли со сдвигом и общей задержкой показывают, где исчезает эта гарантия. Эти результаты получены на собственном симуляторе.")
-    p("При наличии ранее измеренных CRP опубликованные исследования предсказывают новые ответы некоторых Arbiter и XOR Arbiter PUF существенно лучше равновероятного угадывания. Поэтому отсутствие физического доступа в момент предсказания не является достаточным условием непредсказуемости. Значения точности относятся к первичным публикациям.")
-    p(f"Для отдельной задачи агрегированного BER прогноз на новых экземплярах оказался полезен при изменчивом дрейфе. Основной выигрыш Ridge — {pct(case['mae_gain'])} п. п., парный 95%-й интервал {bounds(case, 'gain_ci_low', 'gain_ci_high')} п. п. При устойчивом дрейфе убедительного улучшения относительно текущего BER не получено. Результаты повторены на независимо сгенерированной выборке.")
-    p("Проверка переноса показала, что модель, точная в своём режиме, может уступать простому правилу после изменения дрейфа. При внедрении надёжность прогноза следует перепроверять на новых измерительных условиях с тем же базовым сравнением.")
-    p("Команды воспроизведения симуляции и экспериментов приведены в README. Статус заявленной темы и открытый пункт согласования с семинаристом указаны в таблице требований.")
+    p("Цель основной реализации — предсказать итоговый бит нового запроса конкретного устройства по ранее измеренным CRP. Стенд использует ту же аддитивную модель [4, 9], но обучаемая модель получает только запрос и итоговый XOR. Веса симулятора, задержки и ответы отдельных цепочек ей недоступны. Это самостоятельная реализация идеи моделирования, а не точное воспроизведение алгоритма или аппаратных чисел одной публикации.")
+    p("Для 64-битного запроса c используем публичное преобразование φᵢ(c) = ∏ⱼ₌ᵢ⁶⁴(1 − 2cⱼ) и φ₆₅ = 1. Оцениваем k векторов w и знак произведения s = ∏ₗ(wₗᵀφ). При s < 0 предсказываем ответ 1. Минимизируется средняя log(1 + exp(−ts)) + λ‖W‖²/2, где t = 1 − 2y и λ = 10⁻⁴. Градиент вычислен аналитически и проверен конечными разностями; оптимизатор — L-BFGS-B.")
+    cfg = data["attack_cfg"]
+    p(f"Протокол зафиксирован до полного запуска: {cfg['devices']} устройств в каждой серии, k ∈ {{1, 2, 4}}, шум σ ∈ {{0; 0,1}}, обучающие бюджеты 256, 1024, 4096 CRP. Обучающие наборы вложены. Для выбора одного из {cfg['restarts']} стартов дополнительно доступны {cfg['validation']} валидационных CRP; предел — {cfg['maxiter']} итераций на старт. Итоговый тест содержит {cfg['test']} уникальных запросов, отсутствующих в обучении и валидации. После выбора старта дообучения нет.")
+    p("Сравнения: постоянный бит, выбранный по обучающей доле единиц; логистическая регрессия на φ с C = 1; модель произведения задержек; такая же модель с независимо перемешанными обучающими и валидационными метками. Линейная модель и константа используют только обучающий бюджет; модель произведения дополнительно расходует валидационный бюджет. Поэтому кривые не являются сравнением всех методов при строго одинаковом числе доступных CRP. Константа использует историю данного экземпляра и может превышать 50% за счёт его смещения; это другой сценарий, чем полное отсутствие CRP.")
+    p("Устройства независимы внутри серии. Конфигурации k, шума и бюджета используют согласованные данные одного устройства, поэтому не считаются независимыми репликациями. Повтор с seed 729302 вместо 729301 заново генерирует веса, запросы, шум и начальные точки. 95%-е интервалы — точечный бутстрэп по 12 устройствам (4000 повторов); выигрыш относительно константы вычисляется парно. Одновременное покрытие всех условий не заявляется.")
+    p("Accuracy измеряется по однократному шумному ответу; отдельно сохраняются balanced accuracy и точность по чистому ответу. Пунктир на графике — ожидаемая точность оракула, знающего чистую функцию, при независимом шуме. Даже идеальная модель не предсказывает независимый шум чтения. В results/attack сохранены ответы и прогнозы (NPZ), метрики по устройствам, выбор стартов и аудит разбиения.")
 
     new_page(doc, SECTIONS[11].upper())
+    p("Таблица 6 — Собственные результаты при 4096 обучающих + 512 валидационных CRP. Accuracy по шумному ответу, проценты; в скобках — 95%-й интервал по устройствам. Последний столбец — парный выигрыш над константой в п. п.")
+    attack_rows = []
+    for k in (1, 2, 4):
+        for noise in (0., .1):
+            first = attack_cell(data, k, noise)
+            again = attack_cell(data, k, noise, repeated=True)
+            attack_rows.append((str(k), str(noise).replace('.', ','),
+                f"{pct(first['accuracy'])} [{bounds(first, 'ci_low', 'ci_high')}]",
+                f"{pct(again['accuracy'])} [{bounds(again, 'ci_low', 'ci_high')}]",
+                f"{pct(first['gain'])} [{bounds(first, 'gain_ci_low', 'gain_ci_high')}]"))
+    table(doc, ("k", "σ", "Основная серия, %", "Повтор, %", "Выигрыш, п. п."), attack_rows,
+          widths=(1, 1, 4.7, 4.7, 4.7))
+    figure(doc, results / "attack" / "learning_curves.png",
+           "Рисунок 4 — Кривые обучения, отрицательный контроль и предел из-за шума.")
+    p(attack_interpretation(data))
+    attempts = data["attack_validation"]
+    selected = [r for r in attempts if r["model"] == "product" and r["selected"] == "True"]
+    failed = sum(r["converged"] == "False" for r in selected)
+    p(f"Из {len(selected)} выбранных запусков {failed} завершились без флага сходимости оптимизатора при заданном лимите. Они сохранены в оценке. Ограничения: 12 устройств на серию, фиксированная архитектура, отсутствие аппаратных измерений, ограниченный бюджет стартов. Низкая точность конкретной модели не доказывает криптографическую стойкость XOR PUF.")
+
+    from query_sections import add_word
+    add_word(doc, results, data)
+    from extension_sections import add_word as add_extensions
+    add_extensions(doc, results, data)
+
+    from observation_sections import add_word as add_observation_word
+    add_observation_word(doc, results, data)
+    from ivan_sections import add_word as add_ivan_word
+    add_ivan_word(doc, results, data)
+    new_page(doc, SECTIONS[25].upper())
+    p(f"Расширенная атака при 18432 обучающих CRP без шума получила {pct(query_item(data,3,noise=0.)['accuracy'])}% для 3-XOR и {pct(query_item(data,4,noise=0.)['accuracy'])}% для 4-XOR. В независимом повторе — {pct(query_item(data,3,noise=0.,repeated=True)['accuracy'])}% и {pct(query_item(data,4,noise=0.,repeated=True)['accuracy'])}%. Модели используют публичную архитектуру и историю итоговых CRP.")
+    p(f"При равном бюджете B = 18432 девять коррелированных чтений 2-XOR дали изменение accuracy {effect(query_item(data,2,9,.9))} п. п., в повторе — {effect(query_item(data,2,9,.9,repeated=True))} п. п. Более чистые обучающие метки не гарантируют улучшения при потере разнообразия запросов. Три чтения не дали однозначного эффекта во всех условиях.")
+    p(attack_interpretation(data))
+    p(f"Размер преимущества долей зависит от обучения: после усиления оптимизации и регуляризации на исходных устройствах он составил {pct(data['extensions']['optimizer'][-1]['paired_gain'])} и {pct(data['extensions']['optimizer_repeat'][-1]['paired_gain'])} п. п. Бинарный информационный анализ показывает сохранение среднего и рост дисперсии случайного дизайна при повторах; он не определяет порядок конечной accuracy.")
+    p(observation_conclusion(data))
+    p(ivan_conclusion(data))
+    p(f"В этой новой проверке при B = 4608, σ = 0,25 и r = 9 доли уступили разным запросам на {pct(-float(observation_contrast(data,'fraction','single')['difference']))} и {pct(-float(observation_contrast(data,'fraction','single',True)['difference']))} п. п. Гипотеза и настройка зафиксированы до генерации новых устройств. Первичный контраст отделён от вторичных; точность в этих условиях не переносится автоматически на другие шумы, бюджеты и схемы.")
+    p("Без пар конкретного экземпляра симметричный независимый ансамбль даёт вероятность угадывания 50%. Контроли показывают нарушения этой гарантии при сдвиге и зависимости цепочек. Наличие старых CRP меняет задачу: отсутствие текущего физического доступа не обеспечивает непредсказуемости.")
+    p(f"Для отдельной задачи агрегированного BER прогноз на новых экземплярах оказался полезен при изменчивом дрейфе. Основной выигрыш Ridge — {pct(case['mae_gain'])} п. п., парный 95%-й интервал {bounds(case, 'gain_ci_low', 'gain_ci_high')} п. п. При устойчивом дрейфе убедительного улучшения относительно текущего BER не получено. Результаты повторены на независимо сгенерированной выборке.")
+    p("Проверка переноса показала, что модель, точная в своём режиме, может уступать простому правилу после изменения дрейфа. При внедрении надёжность прогноза следует перепроверять на новых измерительных условиях с тем же базовым сравнением.")
+    p("Команды воспроизведения симуляции и экспериментов приведены в README. Собственная реализация атаки и дополнительные эксперименты отражены в таблице требований; оценку и достаточность симуляции определяет преподаватель.")
+
+    new_page(doc, SECTIONS[26].upper())
     p("Локальная демонстрация проверяет обработку одноразовых запросов при аутентификации [14]. У каждого тестового устройства свой случайный ключ.")
     p("Тег HMAC-SHA-256 вычисляется по контексту протокола, идентификатору устройства и случайному запросу проверяющего [13]. Проверяющий сверяет срок действия и тег. При успехе запрос погашается в той же критической секции.")
     checks = data["defense"]
-    p("Таблица 6 — Исходы локальной демонстрации.")
+    p("Таблица 17 — Исходы локальной демонстрации.")
     table(doc, ("Проверка", "Наблюдаемый исход"), [
         ("Первое предъявление действительного тега", "Принято" if checks["fresh_proof_accepted"] else "Ошибка"),
         ("Повтор ранее принятого тега", "Отклонён" if checks["repeated_proof_rejected"] else "Ошибка"),
@@ -345,21 +455,22 @@ def build_word(output, results, data):
         ("Предъявление после истечения срока", "Отклонено" if checks["expired_challenge_rejected"] else "Ошибка"),
         ("Два конкурентных предъявления", f"Принято {checks['concurrent_acceptance_count']} из 2"),
     ])
-    p("Демонстрация работает в одном процессе с программными тестовыми ключами. Команда запуска — python -m puf_lab.defensive_auth --output build/defense-demo. Результаты тестов сохраняются в nonce_checks.json.")
+    p("Демонстрация работает в одном процессе с программными тестовыми ключами. Ключ не выводится из PUF; этот опыт проверяет обработку повторов, а не устойчивость PUF к моделированию. Команда запуска — python -m puf_lab.defensive_auth --output build/defense-demo. Результаты тестов сохраняются в nonce_checks.json.")
 
-    new_page(doc, SECTIONS[12].upper())
+    new_page(doc, SECTIONS[27].upper())
     p("Точная формулировка РУП и переписка разобраны в report/requirements.md. В РУП тема указана в перечне групповых заданий, критерий верхней базовой оценки требует полной реализации, а рекомендуемый размер группы составляет от трёх до пяти участников [1].")
     table(doc, ("Требование", "Подтверждение", "Статус"), [
         ("Тема № 12 и группа из трёх человек", "РУП, переписка и план подразделения работ", "Зафиксировано"),
-        ("Самостоятельная атака на ответы конкретного PUF", "Раздел 3 содержит обзор опубликованных результатов", "Открыто. Требуется согласование замены"),
+        ("Самостоятельная атака на ответы конкретного PUF", "Разделы 10–11: код, новые запросы, 2 серии по 12 устройств", "Реализовано на симуляторе"),
         ("Сценарий без CRP", "Условие 50%, симуляция и контроли", "Выполнено"),
         ("Сценарий с CRP", "Первичные работы и таблица точных указателей", "Выполнено"),
         ("Собственная ML-оценка BER", "Две независимые серии, парные интервалы, аудит идентификаторов", "Выполнено"),
         ("Проверка материалов и запуск", "README, тесты, манифесты, таблицы и файлы защиты", "Выполнено"),
     ])
-    p("Дополнительные баллы оцениваются преподавателем по условиям РУП. Полученные результаты описываются в пределах симулятора. Данное исследование не устанавливает новизну результата по всем опубликованным работам.")
+    p("Базовая шкала РУП — 0–10 баллов. Дополнительные 10 баллов предусмотрены за воспроизведение или обобщение прежних исследований; дополнительные 20 — за новый научный результат или однозначно востребованный прототип. Для последнего бонуса семинарист выбирает один проект. Собственные контролируемые вычисления представлены для рассмотрения исследовательского бонуса, однако мировой приоритет и рыночная востребованность не установлены. Оценка 30 баллов не объявляется обеспеченной.")
+    p("Требования РУП к шестистраничному индивидуальному эссе и бонусы за его публикацию относятся к отдельной форме аттестации. Этот комплект является групповым проектом. Согласование, понимание работы участниками и итог защиты программно не проверяются; вопросы и распределение выступления подготовлены в report/defense.md.")
 
-    new_page(doc, SECTIONS[13].upper())
+    new_page(doc, SECTIONS[28].upper())
     for number, item in enumerate(SOURCES, 1):
         source = p(f"{number}. {item}")
         source.alignment = WD_ALIGN_PARAGRAPH.LEFT
@@ -541,9 +652,9 @@ def build_slides(output, results, data):
          .65, 2.02, 11.9, .89, 23, INK, True)
     text(slide, "Со старыми парами известны аппаратные контрпримеры непредсказуемости.",
          .65, 3.23, 11.95, .86, 21)
-    text(slide, "Наша ML-часть оценивает агрегированный BER следующей сессии на симуляторе.",
+    text(slide, "Собственная атака оценивает биты ответов; отдельный эксперимент — BER следующей сессии.",
          .65, 4.45, 12, .85, 21)
-    text(slide, "Открытый пункт для согласования с семинаристом указан в таблице требований.",
+    text(slide, "Результаты собственных опытов относятся к симулятору. Аппаратные данные — из публикаций.",
          .65, 5.68, 12, .90, 19, TEAL, True)
 
     slide = page(deck, "Демонстрация", "Проверка одноразового запроса")
@@ -566,6 +677,46 @@ def build_slides(output, results, data):
     block(slide, .65, 5.11, 12, 1.13, LIGHT)
     text(slide, "python -m puf_lab.forecast_cli --profile smoke --output build/demo",
          .87, 5.53, 11.6, .38, 17, TEAL, True)
+
+    slide = page(deck, "Собственная атака", "Обучение по старым CRP → новые ответы")
+    tiles(slide, [
+        ("1 / 2 / 4 XOR", "64-битные запросы; итоговый ответ"),
+        ("256–4096", "Обучающие CRP + 512 на выбор старта"),
+        ("12 + 12", "Устройства основной серии и повтора"),
+    ])
+    text(slide, "Модель произведения задержек обучается только по запросам и итоговым битам.",
+         .65, 4.38, 12, .88, 22, INK, True)
+    text(slide, "2048 новых запросов на тест. Веса симулятора скрыты от модели. Контроль — перемешивание меток.",
+         .65, 5.55, 12, .95, 19, MUTED)
+
+    slide = page(deck, "Результат атаки", "Как точность зависит от CRP, XOR и шума")
+    slide.shapes.add_picture(str(results / "attack" / "learning_curves.png"),
+                             Inches(1.77), Inches(1.64), width=Inches(9.75))
+    a = attack_cell(data, 2, .1)
+    b = attack_cell(data, 2, .1, repeated=True)
+    text(slide, f"2-XOR, σ = 0,1, 4096 CRP: {pct(a['accuracy'])}% → {pct(b['accuracy'])}% в независимом повторе.",
+         .65, 7.02, 12, .32, 16, TEAL, True)
+
+    slide = page(deck, "Выводы", "Что теперь подтверждено собственной реализацией")
+    a = attack_cell(data, 1, .1)
+    b = attack_cell(data, 2, .1)
+    tiles(slide, [
+        (f"{pct(a['accuracy'])}%", "Arbiter: новый шумный ответ"),
+        (f"{pct(b['accuracy'])}%", "2-XOR: новый шумный ответ"),
+        (f"{pct(attack_cell(data, 4, .1)['accuracy'])}%", "4-XOR: при том же бюджете"),
+    ])
+    text(slide, "История CRP позволяет моделировать ответы в исследованных условиях симуляции.",
+         .65, 4.38, 12, .9, 22, INK, True)
+    text(slide, "Аппаратная проверка остаётся будущей работой. Неуспех одной модели не доказывает стойкость PUF.",
+         .65, 5.55, 12, .95, 19, MUTED)
+    from query_sections import add_slides
+    add_slides(deck, results, data)
+    from extension_sections import add_slides as add_extension_slides
+    add_extension_slides(deck, results, data)
+    from observation_sections import add_slides as add_observation_slides
+    add_observation_slides(deck, results, data)
+    from ivan_sections import add_slides as add_ivan_slides
+    add_ivan_slides(deck, results, data)
     deck.save(output / "slides.pptx")
 
 
@@ -583,7 +734,19 @@ def load_data(results):
 
     common = {"chains": 4, "correlation": .6}
     temporal = read_csv(results / "sensitivity", "temporal_persistence")
+    from query_sections import load_query_data
+    from extension_sections import load as load_extensions
+    from observation_sections import load as load_observation
+    from ivan_sections import load as load_ivan
     return {
+        "ivan": load_ivan(results),
+        "observation": load_observation(results),
+        "extensions": load_extensions(results),
+        "queries": load_query_data(results),
+        "attack": read_csv(results / "attack", "metrics"),
+        "attack_repeat": read_csv(results / "attack" / "repeat", "metrics"),
+        "attack_cfg": json.loads((results / "attack" / "manifest.json").read_text(encoding="utf-8")),
+        "attack_validation": read_csv(results / "attack", "validation"),
         "evidence": evidence,
         "defense": json.loads((results / "defense" / "nonce_checks.json").read_text(encoding="utf-8")),
         "control": {(int(r["chains"]), float(r["mean_delay_offset"])): r

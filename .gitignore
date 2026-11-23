@@ -221,3 +221,20 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Local discussion and raw datasets (not project deliverables).
+/Info_protect.md
+/data/
+
+# Regenerable experiment payloads. Keep CSV summaries, manifests,
+# verification records, plots and the final report under version control.
+/results/**/*.npz
+/results/**/models/
+/results/**/traces/
+/results/**/runs.jsonl
+
+# Office lock files and desktop metadata.
+.~lock.*#
+~$*
+.DS_Store
+Thumbs.db
